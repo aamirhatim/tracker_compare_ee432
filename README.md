@@ -1,10 +1,10 @@
 # Real-Time Object Tracking Performance on Mobile Robots
-## EECS 432: Advanced Computer Vision (Winter 2018)
-### Northwestern University
 ### Aamir Husain
+### EECS 432: Advanced Computer Vision (Winter 2018)
+### Northwestern University
 
 ## Introduction
-Object detection and tracking has been a widely studied area in computer vision. With constant innovations in technology, our computational efficiency has tremendously increased, allowing complicated processes like object tracking to be a realistic application. One main struggle with current technology, however, is getting reliable performance on lower-end devices or products that are severely limited by space and power - like a mobile robot. This project narrows in on this area of object tracking and detection, applying a series of object tracking algorithms on video samples and comparing their performance offline and in real-time.
+Object detection and tracking has been a widely studied area in computer vision. With constant innovations in technology, our computational efficiency has tremendously increased, allowing complicated processes like object tracking to be a realistic application. One main struggle with current technology, however, is getting reliable performance on lower-end devices or products that are severely limited by space and power - like a mobile robot. This project narrows in on this area of object tracking and detection, applying a series of object tracking algorithms on video samples and comparing their performance off-line and in real-time.
 
 ## Setup
 ### Required Software/Packages
@@ -29,11 +29,21 @@ This process was done first on videos recorded on the laptop to ensure proper da
 
 Finally, a series of videos were taken in real time on the mobile robot for each algorithm. The same metrics (bounding box location, processing speed, detection failures) were recorded.
 
+### Algorithms Used
+
+
 ### Running the Code
 To start the tracker on a live video feed, run the following command:
 ```
 $ roslaunch tracker start_cam.launch
 ```
+
+To create your own data from pre-recorded videos, add the videos to the `/videos` directory. Then run the following command:
+```
+$ cd src/
+$ ./tracker_data.py
+```
+This does not need ROS to run. A new folder will be created in `data/` for each video if it doesn't exist. The `tracker_data.py` code will then store the tracking data for each video in its respective folder. To view the data, run the `tracker()` function in `tracker.m` in MATLAB. This will plot the bounding box trails of each tracker for each video (every video will have its own window).
 
 ## Results
 
