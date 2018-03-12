@@ -1,5 +1,6 @@
 function tracker()
 files = dir('data');
+fps = zeros(length(files)-2, 5);
 
 for i = 3:length(files)
     path = "data/"+files(i).name+"/";
@@ -9,6 +10,19 @@ for i = 3:length(files)
     medianflow = csvread(path+"MEDIANFLOW.csv");
     mil = csvread(path+"MIL.csv");
     tld = csvread(path+"TLD.csv");
+        
+    %% Get average FPS for each tracker
+    avg = mean(boosting(:,4));
+    fps(i-2,1) = avg;
+    avg = mean(kcf(:,4));
+    fps(i-2,2) = avg;
+    avg = mean(medianflow(:,4));
+    fps(i-2,3) = avg;
+    avg = mean(mil(:,4));
+    fps(i-2,4) = avg;
+    avg = mean(tld(:,4));
+    fps(i-2,5) = avg;
+    
     
     %% Plot position of bounding box
     figure('Name', files(i).name)
@@ -23,6 +37,7 @@ for i = 3:length(files)
     title("Y Position over Time");
     ylabel("Position (px)");
     xlabel("Time (ms)");
+    ylim([-5 480]);
     hold off;
     
     subplot(2,1,2)
@@ -36,8 +51,19 @@ for i = 3:length(files)
     title("X Position over Time");
     ylabel("Position (px)");
     xlabel("Time (ms)");
+    ylim([-5 640]);
     hold off;
     
 end
+
+%% Get overal FPS average
+fps_mean = mean(fps);
+labels = ["Boosting" "KCF" "MedianFlow" "MIL" "TLD"];
+figure('Name', 'Average FPS')
+bar(fps_mean)
+set(gca, 'xticklabels', labels)
+title("Average FPS");
+ylabel("Frames per Second");
+xlabel("Algorithm");
 
 end
