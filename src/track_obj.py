@@ -23,8 +23,8 @@ class Tracker:
 
     def track(self, data):
         # Convert and downsize incoming Image --> 640x480 to 320x240
-        img_raw = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        frame = cv2.flip(cv2.resize(img_raw, (0,0), fx = .5, fy = .5), 1)
+        frame = self.bridge.imgmsg_to_cv2(data, "bgr8")
+        # frame = cv2.flip(cv2.resize(img_raw, (0,0), fx = .5, fy = .5), 1)
 
         # Set up tracker on first image frame
         if self.setup == False:
@@ -37,9 +37,9 @@ class Tracker:
 
         # If tracking was successful, make the new bounding box
         if self.check:
-            p1 = (int(self.bounds[0]), int(self.bounds[1]))
-            p2 = (int(self.bounds[0] + self.bounds[2]), int(self.bounds[1] + self.bounds[3]))
-            cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
+            # p1 = (int(self.bounds[0]), int(self.bounds[1]))
+            # p2 = (int(self.bounds[0] + self.bounds[2]), int(self.bounds[1] + self.bounds[3]))
+            # cv2.rectangle(frame, p1, p2, (255,0,0), 2, 1)
 
             # Find center and get its average over 10 frames
             center = Point()
@@ -57,13 +57,23 @@ class Tracker:
                 self.avg.y = 0
 
         else:
-            cv2.putText(frame, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
+            if self.count < 10:
+                # self.avg.x += center.x/10
+                # self.avg.y += center.y/10
+                self.count += 1
+            else:
+                # Publish averaged center
+                self.pub.publish(center)
+                self.count = 0
+                self.avg.x = 0
+                self.avg.y = 0
+            # cv2.putText(frame, "Tracking failure detected", (100,80), cv2.FONT_HERSHEY_SIMPLEX, 0.75,(0,0,255),2)
 
         # Display tracker on image
-        cv2.imshow("Tracking", frame)
-        k = cv2.waitKey(5) & 0xff
-        if k == 27:
-            return
+        # cv2.imshow("Tracking", frame)
+        # k = cv2.waitKey(5) & 0xff
+        # if k == 27:
+        #     return
 
     def tracker_setup(self, frame):
         print "Preparing tracker..."
