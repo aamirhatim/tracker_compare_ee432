@@ -23,14 +23,18 @@ Object detection and tracking has been a widely studied area in computer vision.
 - RAM: 1GB
 
 ## Procedure
-For comparison, a series of videos were taken in different settings (outdoor, indoor, low light, bright light, moving, stationary, etc.). While a tracker was run on each video, the location of the bounding box was recorded and plotted over time as well as its processing speed (measured in frames per second). Any detection failures were also noted.
+1. For comparison, a series of videos were taken in different settings (outdoor, indoor, low light, bright light, moving, stationary, etc.). While a tracker was run on each video, the location of the bounding box was recorded and plotted over time as well as its processing speed (measured in frames per second). Any detection failures were also noted.
 
-This process was done first on videos recorded on the laptop to ensure proper data gathering. Once that was confirmed, the process was repeated for the mobile robot.
+2. Using the data from step 1, the best algorithm was chosen for the mobile robot. A ROS publisher was added to the tracker algorithm to send out coordinates of the bounding box and a separate subscriber was written to create motor commands from the published points. The subscriber can be found in the [Argo](https://github.com/aamirhatim/argo.git) package that was made for controlling the robot.
 
-Finally, a series of videos were taken in real time on the mobile robot for each algorithm. The same metrics (bounding box location, processing speed, detection failures) were recorded.
+3. Performance of the robot was observed using the chosen tracking method from step 2 and also with AR tags.
 
-### Algorithms Used
-
+### Algorithms Tested
+- Boosting
+- KCF
+- MedianFlow
+- MIL
+- TLD
 
 ### Running the Code
 To start the tracker on a live video feed, run the following command:
@@ -40,7 +44,7 @@ $ roslaunch tracker start_cam.launch
 
 To create your own data from pre-recorded videos, add the videos to the `/videos` directory. Then run the following command:
 ```
-$ cd src/
+$ cd scripts/
 $ ./tracker_data.py
 ```
 This does not need ROS to run. A new folder will be created in `data/` for each video if it doesn't exist. The `tracker_data.py` code will then store the tracking data for each video in its respective folder. To view the data, run the `tracker()` function in `tracker.m` in MATLAB. This will plot the bounding box trails of each tracker for each video (every video will have its own window).
@@ -48,5 +52,6 @@ This does not need ROS to run. A new folder will be created in `data/` for each 
 ## Results
 
 ## Challenges
+Getting reliable data from the mobile robot was a challenge due to its lower processing power.
 
 ## Conclusion
